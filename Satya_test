@@ -1,4 +1,4 @@
-satya
+satya | new proposal
 
 <configuration name="acl.conf" description="Network Lists">
   <network-lists>
