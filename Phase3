@@ -1,0 +1,84 @@
+#!/bin/bash
+
+echo 'Proxy or presence or registrar'
+read VAR
+
+if [[ "$VAR" = "proxy" ]]
+then
+#Moving to the modules.lst path and executing the modules include command
+cd /usr/src/kamailio/src/
+#Including the modules
+make include_modules="db_mysql jsonrpcs kex corex tm tmx sl rr pv maxfwd usrloc registrar textops textopsx siputils xlog sanity ctl cfg_rpc counters pua pua_dialoginfo dmq dmq_usrloc htable dialog uac_redirect async sqlops dispatcher regex avpops dlgs sca xhttp uac sdpops auth " MEMMNG=0 cfg
+#Compiling
+make all & make install
+
+#Importing the data in db
+mysql kam_next_gen < kam_next_gen_network.sql -u root -p
+echo 'Imported DB'
+
+#Copying the cfg file
+cp /root/kamailio.cfg /usr/local/etc/kamailio
+echo 'successfully copied cfg file'
+systemctl restart kamailio
+echo 'Kamailio restarted successfully'
+fi
+
+if [[ "$VAR" = "presence" ]] 
+then
+#Moving to the modules.lst path and executing the modules include command
+cd /usr/src/kamailio/src/
+#Including the modules
+make include_modules="db_mysql tm tmx sl rr pv maxfwd textops siputils xlog sanity ctl counters nathelper xhttp debugger avpops sdpops mangler jsonrpcs ipops cfgutils kex textopsx async usrloc registrar dmq presence presence_conference presence_dialoginfo presence_mwi presence_profile presence_reginfo presence_xml permissions sqlops pua pua_rpc" MEMMNG=0 cfg
+#Compiling
+make all & make install
+
+#Importing the data in db
+mysql kam_next_gen < kam_next_gen_network.sql -u root -p
+echo 'Imported DB'
+
+#Copying the cfg file
+cp /root/kamailio.cfg /usr/local/etc/kamailio
+echo 'successfully copied cfg file'
+systemctl restart kamailio
+echo 'Kamailio restarted successfully'
+fi
+
+if [[ "$VAR" = "registrar" ]]
+then
+#Moving to the modules.lst path and executing the modules include command
+cd /usr/src/kamailio/src/
+#Including the modules
+make include_modules="db_mysql tm tmx sl rr pv maxfwd textops siputils xlog sanity ctl counters nathelper xhttp debugger avpops sdpops mangler jsonrpcs ipops cfgutils kex textopsx async usrloc auth auth_db sqlops regex registrar permissions dmq dmq_usrloc" MEMMNG=0 cfg
+#Compiling
+make all & make install
+
+#Importing the data in db
+mysql kam_next_gen < kam_next_gen_network.sql -u root -p
+echo 'Imported DB'
+
+#Copying the cfg file
+cp /root/kamailio.cfg /usr/local/etc/kamailio
+echo 'successfully copied cfg file'
+systemctl restart kamailio
+echo 'Kamailio restarted successfully'
+fi
+
+if [[ "$VAR" = "network" ]]
+then
+#Moving to the modules.lst path and executing the modules include command
+cd /usr/src/kamailio/src/
+#Including the modules
+make include_modules="db_mysql jsonrpcs kex corex tm tmx sl rr pv maxfwd usrloc registrar textops textopsx siputils xlog sanity ctl cfg_rpc counters htable dialog uac_redirect async sqlops dispatcher regex avpopshttp_client uac" MEMMNG=0 cfg
+#Compiling
+make all & make install
+
+#Importing the data in db
+mysql kam_next_gen < kam_next_gen_network.sql -u root -p
+echo 'Imported DB'
+
+#Copying the cfg file
+cp /root/kamailio.cfg /usr/local/etc/kamailio
+echo 'successfully copied cfg file'
+systemctl restart kamailio
+echo 'Kamailio restarted successfully'
+fi
